@@ -9,7 +9,10 @@
 <div class="home">
 	<header class="home-header">
 		<h1 class="wordmark">Margo</h1>
-		<a href="/editor" class="new-btn">New collage</a>
+		<div class="header-actions">
+			<a href="/about" class="about-link">About</a>
+			<a href="/editor" class="new-btn">New collage</a>
+		</div>
 	</header>
 
 	<div class="empty-state">
@@ -59,6 +62,24 @@
 
 	.new-btn:hover {
 		background: var(--color-terracotta-light);
+	}
+
+	.header-actions {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.about-link {
+		font-family: var(--font-sans);
+		font-size: 13px;
+		color: var(--color-ink-mid);
+		text-decoration: none;
+		transition: color 0.15s;
+	}
+
+	.about-link:hover {
+		color: var(--color-ink);
 	}
 
 	.empty-state {
