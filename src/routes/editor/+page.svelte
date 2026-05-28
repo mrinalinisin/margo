@@ -1,11 +1,49 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import TopBar from '$lib/components/editor/TopBar.svelte';
 	import ToolPanel from '$lib/components/editor/ToolPanel.svelte';
 	import Canvas from '$lib/components/editor/Canvas.svelte';
 	import LayersPanel from '$lib/components/editor/LayersPanel.svelte';
+	import TheoTray from '$lib/components/editor/TheoTray.svelte';
 	import { editorStore } from '$lib/stores/editor';
+	import { onMount } from 'svelte';
 
 	let canvas: Canvas;
+
+	// ── Theo import tray ──────────────────────────────────────────
+	interface TheoProduct {
+		id: number;
+		name: string;
+		store: string;
+		image_url: string | null;
+		images: string[];
+		tags: string[];
+	}
+
+	let theoProducts = $state<TheoProduct[]>([]);
+	let theoLoading = $state(false);
+	let showTheoTray = $state(false);
+
+	onMount(async () => {
+		const fromParam = $page.url.searchParams.get('from');
+		const idsParam = $page.url.searchParams.get('ids');
+		if (fromParam === 'theo' && idsParam) {
+			showTheoTray = true;
+			theoLoading = true;
+			try {
+				const res = await fetch(
+					`http://localhost:5111/api/margo/products?ids=${idsParam}`
+				);
+				if (res.ok) theoProducts = await res.json();
+			} catch (e) {
+				console.warn('Could not reach Theo:', e);
+			} finally {
+				theoLoading = false;
+			}
+		}
+	});
+
+	// ── Canvas handlers ───────────────────────────────────────────
 
 	function handleUploadImage(file: File) {
 		canvas.addImageFile(file);
@@ -43,6 +81,14 @@
 
 	<div class="editor-body">
 		<ToolPanel onUploadImage={handleUploadImage} />
+
+		{#if showTheoTray}
+			<TheoTray
+				products={theoProducts}
+				loading={theoLoading}
+				onAddImage={(url, name) => canvas.addImageFromUrl(url, name)}
+			/>
+		{/if}
 
 		<Canvas bind:this={canvas} />
 

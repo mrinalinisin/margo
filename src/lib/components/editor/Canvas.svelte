@@ -112,6 +112,14 @@
 		reader.readAsDataURL(file);
 	}
 
+	export function addImageFromUrl(url: string, name: string) {
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
+		img.onload = () => addImageNode(img, url, name);
+		img.onerror = () => console.warn('Margo: failed to load image from', url);
+		img.src = url;
+	}
+
 	function addImageNode(img: HTMLImageElement, src: string, filename: string) {
 		const id = crypto.randomUUID();
 		const maxDim = Math.min(stage.width(), stage.height()) * 0.6;
