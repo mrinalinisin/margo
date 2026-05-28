@@ -113,11 +113,23 @@
 	}
 
 	export function addImageFromUrl(url: string, name: string) {
+		// Route cross-origin localhost URLs through our server-side proxy so
+		// the image is same-origin and won't taint the Konva canvas.
+		let src = url;
+		try {
+			const parsed = new URL(url);
+			if (
+				(parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') &&
+				parsed.port !== window.location.port
+			) {
+				src = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+			}
+		} catch { /* not a valid URL, use as-is */ }
+
 		const img = new Image();
-		img.crossOrigin = 'anonymous';
-		img.onload = () => addImageNode(img, url, name);
-		img.onerror = () => console.warn('Margo: failed to load image from', url);
-		img.src = url;
+		img.onload = () => addImageNode(img, src, name);
+		img.onerror = () => console.warn('Margo: failed to load image from', src);
+		img.src = src;
 	}
 
 	function addImageNode(img: HTMLImageElement, src: string, filename: string) {
