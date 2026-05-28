@@ -1,5 +1,0 @@
-#!/bin/sh
-set -e
-cd /Users/sindhus/Desktop/ss_life/Margo
-exec 2>&1
-exec env PORT=5222 node build
