@@ -4,7 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
  * Server-side image proxy — fetches an external image and returns it
  * as same-origin, bypassing any cross-origin canvas taint restrictions.
  *
- * GET /api/proxy-image?url=http://localhost:5111/images/foo.jpg
+ * GET /api/proxy-image?url=http://localhost:5333/images/foo.jpg
  */
 export const GET: RequestHandler = async ({ url }) => {
 	const imageUrl = url.searchParams.get('url');

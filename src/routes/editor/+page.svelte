@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { PUBLIC_THEO_URL } from '$env/static/public';
 	import TopBar from '$lib/components/editor/TopBar.svelte';
 	import ToolPanel from '$lib/components/editor/ToolPanel.svelte';
 	import Canvas from '$lib/components/editor/Canvas.svelte';
@@ -32,7 +33,7 @@
 			theoLoading = true;
 			try {
 				const res = await fetch(
-					`http://localhost:5111/api/margo/products?ids=${idsParam}`
+					`${PUBLIC_THEO_URL}/api/margo/products?ids=${idsParam}`
 				);
 				if (res.ok) theoProducts = await res.json();
 			} catch (e) {
